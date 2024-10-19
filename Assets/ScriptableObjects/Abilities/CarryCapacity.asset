@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ddf7c1ada77bbe419831ca4fc18005b, type: 3}
+  m_Name: CarryCapacity
+  m_EditorClassIdentifier: 
+  isItem: 0
+  isAbility: 1
+  isUpgradeAble: 1
+  requireSomething: 1
+  itemName: Carry Capacity
+  itemImage: {fileID: 21300014, guid: 0bc4ed27aef38a44bb72e80f9beb5326, type: 3}
+  description: Carry More Trash
+  itemRequiered: {fileID: 11400000, guid: 0551adea0fd98474fbb035ddb3ad57e4, type: 2}
+  itemCost: 0
+  itemBuffAmt: 1
+  isOwned: 0

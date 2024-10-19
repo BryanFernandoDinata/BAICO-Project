@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ddf7c1ada77bbe419831ca4fc18005b, type: 3}
+  m_Name: SpeedBoots
+  m_EditorClassIdentifier: 
+  isItem: 1
+  isAbility: 0
+  isUpgradeAble: 0
+  requireSomething: 0
+  itemName: Speed Boots
+  itemImage: {fileID: 21300004, guid: 0bc4ed27aef38a44bb72e80f9beb5326, type: 3}
+  description: This item lets you move faster
+  itemRequiered: {fileID: 0}
+  itemCost: 0
+  itemBuffAmt: 2
+  isOwned: 0
