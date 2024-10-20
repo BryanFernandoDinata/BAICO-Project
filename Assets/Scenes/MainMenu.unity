@@ -940,8 +940,7 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 82152957783250852, guid: ecb221534c7cdd54abe1bbf679139c65,
-        type: 3}
+    - target: {fileID: 82152957783250852, guid: ecb221534c7cdd54abe1bbf679139c65, type: 3}
       propertyPath: m_PlayOnAwake
       value: 1
       objectReference: {fileID: 0}

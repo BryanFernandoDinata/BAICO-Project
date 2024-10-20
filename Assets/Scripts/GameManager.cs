@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using MoreMountains.Feedbacks;
+using System;
 
 public class GameManager : MonoBehaviour {
 
     public static GameManager instance;
-    public MMF_Player mmPlayer;
-
-    public CharStats[] playerStats;
-
-    public bool gameMenuOpen = false, dialogActive = false, fadingBetweenAreas = false, shopActive = false;
-
-    public string[] itemsHeld;
-    public int[] numberOfItems;
-    public Item[] referenceItems;
+    public bool pauseMenuOpen = false, dialogActive = false, fadingBetweenAreas = false, shopActive = false;
     public int totalStoredTrash;
+
+    [Header("Player")]
+    public CharStats[] playerStats;
+    public List<Item> itemsOwned = new List<Item>();
+    public List<Item> allInGameItems = new List<Item>();
+
+    [Header("Feel")]
+    public MMF_Player mmPlayer;
 
 	// Use this for initialization
 	void Start () 
@@ -24,11 +25,24 @@ public class GameManager : MonoBehaviour {
         instance = this;
 
         DontDestroyOnLoad(gameObject);
+        
+        for(int i = 0; i < allInGameItems.Count; i ++)
+        {
+            if(PlayerPrefs.HasKey(allInGameItems[i].itemName))
+            {
+                itemsOwned.Add(allInGameItems[i]);
+                allInGameItems[i].isOwned = true;
+            }else
+            {
+                allInGameItems[i].isOwned = false;
+            }
+        }
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		if(gameMenuOpen || dialogActive || fadingBetweenAreas || shopActive ||playerStats[0].currentHealth <=0)
+	void Update () 
+    {
+		if(pauseMenuOpen || dialogActive || fadingBetweenAreas || shopActive ||playerStats[0].currentHealth <=0)
         {
             PlayerController.instance.canMove = false;
         } else
@@ -36,15 +50,32 @@ public class GameManager : MonoBehaviour {
             PlayerController.instance.canMove = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            SaveData();
-        }
+        // if (Input.GetKeyDown(KeyCode.O))
+        // {
+        //     SaveData();
+        // }
 
-        if (Input.GetKeyDown(KeyCode.P))
+        // if (Input.GetKeyDown(KeyCode.P))
+        // {
+        //     LoadData();
+        // }
+        if(Input.GetKeyDown(KeyCode.Escape))
         {
-            LoadData();
+            if(!pauseMenuOpen)
+            {
+                GameMenu.instance.OpenPausePanel();
+            }else
+            {
+                if(!GameMenu.instance.questMenu.activeInHierarchy)
+                {
+                    GameMenu.instance.ClosePausePanel();
+                }else
+                {
+                    GameMenu.instance.CloseQuestPanel();
+                }
+            }
         }
+        
     }
 
     public void SaveData()

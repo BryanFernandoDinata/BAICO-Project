@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using MoreMountains.Feedbacks;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour 
 {
+    public static AudioManager instance;
     public AudioSource[] sfx;
     public AudioSource[] bgm;
-
-    public static AudioManager instance;
 
     // Use this for initialization
     void Start () 
@@ -15,6 +15,17 @@ public class AudioManager : MonoBehaviour
         instance = this;
 
         DontDestroyOnLoad(this.gameObject);
+
+        if(PlayerPrefs.HasKey("Mute"))
+        {
+            if(PlayerPrefs.GetInt("Mute") == 1)
+            {
+                Mute();
+            }else
+            {
+                
+            }
+        }
 	}
 	
     public void PlaySFX(int soundToPlay)
@@ -43,6 +54,28 @@ public class AudioManager : MonoBehaviour
         for(int i = 0; i < bgm.Length; i++)
         {
             bgm[i].Stop();
+        }
+    }
+    public void Mute()
+    {
+        foreach(AudioSource a in bgm)
+        {
+            a.volume = 0;
+        }
+        foreach(AudioSource a in sfx)
+        {
+            a.volume = 0;
+        }
+    }
+    public void UnMute()
+    {
+        foreach(AudioSource a in bgm)
+        {
+            a.volume = 0.2f;
+        }
+        foreach(AudioSource a in sfx)
+        {
+            a.volume = 1;
         }
     }
 }

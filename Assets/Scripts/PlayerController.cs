@@ -16,7 +16,6 @@ public class PlayerController : MonoBehaviour
     public string areaTransitionName;
     private Vector3 bottomLeftLimit;
     private Vector3 topRightLimit;
-
     public bool canMove = true;
 
 

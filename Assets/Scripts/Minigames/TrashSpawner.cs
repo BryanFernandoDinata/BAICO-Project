@@ -15,7 +15,7 @@ public class TrashSpawner : MonoBehaviour
     {
         for(int i = 0; i < spawnPos.Length; i++)
         {
-            Debug.Log(i);
+//            Debug.Log(i);
             Instantiate(objectsToSpawn[Random.Range(0, objectsToSpawn.Length)], spawnPos[i]);
         }
     }

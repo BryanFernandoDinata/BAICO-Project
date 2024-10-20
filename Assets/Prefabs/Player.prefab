@@ -76,7 +76,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 343827001
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -1134418335, guid: f05b29abe3ab693428b31ab55dd26758, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -168,8 +168,10 @@ MonoBehaviour:
   moveSpeed: 5
   myAnim: {fileID: 95214761617523964}
   areaTransitionName: 
+  Players: []
   canMove: 1
   collectedCollectibles: []
+  ownedItems: []
 --- !u!95 &95214761617523964
 Animator:
   serializedVersion: 5

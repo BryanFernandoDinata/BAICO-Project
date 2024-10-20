@@ -15,6 +15,7 @@ public class ShopItem : MonoBehaviour
     public Image itemIcon;
     public Item item;
     [HideInInspector] public bool alreadyPurchased;
+    [HideInInspector] public bool notEnoughGold = true;
     private void Start() 
     {
         if(item == null)
@@ -25,7 +26,15 @@ public class ShopItem : MonoBehaviour
         }else
         {
             itemIcon.sprite = item.itemImage;
+            if(PlayerPrefs.HasKey(item.itemName))
+            {
+                item.isOwned = true;
+            }else
+            {
+                item.isOwned = false;
+            }
         }
+
         if(PlayerPrefs.HasKey("lastShopItemSelected"))
         {
             Select();
@@ -33,7 +42,30 @@ public class ShopItem : MonoBehaviour
         {
             if(shopItemIndex == 0)
             {
-                Select();
+                PlayerPrefs.SetInt("lastShopItemSelected", shopItemIndex);
+            
+                isSelected = true;
+                GameMenu.instance.selectedShopItem = this;
+                backgroundHolder.color = SelectedColor;
+                itemIcon.color = SelectedColor;
+
+                GameMenu.instance.UpdateShopUI();
+
+                GameMenu.instance.descriptionText.text = item.description;
+
+                if(alreadyPurchased)
+                {
+                    if(item.isAbility)
+                    {
+                        GameMenu.instance.purchaseText.text = "Upgrade";
+                    }else if(item.isItem)
+                    {
+                        GameMenu.instance.purchaseText.text = "Owned";
+                    }
+                }else
+                {
+                    GameMenu.instance.purchaseText.text = "Purchase";
+                }
             }
         }
     }
@@ -49,6 +81,13 @@ public class ShopItem : MonoBehaviour
             GameMenu.instance.selectedShopItem = this;
             backgroundHolder.color = SelectedColor;
             itemIcon.color = SelectedColor;
+
+            if(CurrencyManager.instance.currentGold >= item.itemCost)
+            {
+                notEnoughGold = false;
+            }
+
+            GameMenu.instance.UpdateShopUI();
 
             GameMenu.instance.descriptionText.text = item.description;
 
@@ -94,11 +133,13 @@ public class ShopItem : MonoBehaviour
     }
     public void Purcahse()
     {
-        // if(CurrencyManager.instance.coin > item.itemCost)
-        // {
-
-        // }
-
+        if(!notEnoughGold)
+        {
+            GameManager.instance.itemsOwned.Add(item);
+            item.isOwned = true;
+            
+            PlayerPrefs.SetInt(item.itemName, 1);
+        }
     }
     public void Upgrade()
     {

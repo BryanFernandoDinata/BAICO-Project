@@ -4,22 +4,31 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System;
+using MoreMountains.Feel;
 public class GameMenu : MonoBehaviour 
 {
     public static GameMenu instance;
 
-    [Header("New")]
+    [Header("MainGameUI")]
     public TextMeshProUGUI totalStoredTrash;
-
     public HealthController playerHealthController;
+    public TextMeshProUGUI coinText;
+
+    [Header("ButtonColor")]
+    public Color defaultColor;
+    public Color hoverColor;
 
     [Header("GameOverPanel")]
     public GameObject GameOverPanel;
-
+    
     [Header("Shop UI")]
     public GameObject shopPanel;
+    public GameObject mainPurchaseButtonHolder;
+    public GameObject ownedTextHolder;
     public TextMeshProUGUI descriptionText;
     public TextMeshProUGUI purchaseText;
+    public TextMeshProUGUI itemCostText;
     public Button purchaseButton;
     public List<ShopItem> shopItems = new List<ShopItem>();
     [HideInInspector] public ShopItem selectedShopItem;
@@ -28,6 +37,20 @@ public class GameMenu : MonoBehaviour
     public GameObject popUpPanel;
     public TextMeshProUGUI confirmationDescriptionText;
     public TextMeshProUGUI purchaseTextConfirm;
+
+    [Header("Puase UI")]
+    public GameObject pauseMenu;
+    public GameObject mainTab;
+    public Image muteImage;
+    public Sprite mutedIcon;
+    public Sprite notMutedIcon;
+    [HideInInspector] public int isMuted = 1;
+
+    [Header("Quest UI")]
+    public GameObject questMenu;
+    public GameObject questOngoingHolder;
+    public GameObject questDoneHolder;
+
     private void Awake() 
     {
         if(instance == null)
@@ -35,6 +58,27 @@ public class GameMenu : MonoBehaviour
         else
             Destroy(gameObject);
     }
+    private void Start() 
+    {
+        if(PlayerPrefs.HasKey("Mute"))
+        {
+            if(PlayerPrefs.GetInt("Mute") == 1)
+            {
+                muteImage.sprite = mutedIcon;
+                isMuted = 1;
+            }else
+            {
+                muteImage.sprite = notMutedIcon;
+                isMuted = 0;
+            }
+        }else
+        {
+            muteImage.sprite = notMutedIcon;
+            isMuted = 0;
+        }
+    }
+
+    #region Shop
     public void OpenShop()
     {
         if(shopPanel.activeInHierarchy == false)
@@ -42,8 +86,8 @@ public class GameMenu : MonoBehaviour
             GameManager.instance.shopActive = true;
             shopPanel.SetActive(true);
             
-            ResetAllSelectedShopItems();
-
+            //ResetAllSelectedShopItems();
+            //CheckSelectedItem();
             if(!PlayerPrefs.HasKey("lastShopItemSelected"))
             {
                 //shopItems[0].Select();
@@ -71,7 +115,7 @@ public class GameMenu : MonoBehaviour
                 selectedShopItem.Upgrade();
             }
         }
-        
+        ClosePopUpPanel();
     }
     public void OpenPopUpPanel()
     {
@@ -103,45 +147,232 @@ public class GameMenu : MonoBehaviour
             s.Deselect();
         }
     }
-    void UpdateShopUI()
+    public void UpdateShopUI()
     {
         purchaseText.text = "Purchase";
-        purchaseButton.interactable = true;
-        confirmationDescriptionText.text = "Do you want to buy " + selectedShopItem.item.itemName;
-        purchaseTextConfirm.text = "Purchase";
 
-        if(selectedShopItem.item.isOwned && !selectedShopItem.item.isUpgradeAble && !selectedShopItem.item.requireSomething)
-        {
-            purchaseText.text = "Owned";
-            purchaseButton.interactable = false;
-
-            //confirmationDescriptionText.text = "Do you want to upgrade " + selectedShopItem.item.itemName;
-            purchaseTextConfirm.text = "Owned";
-        }else if(selectedShopItem.item.isOwned && selectedShopItem.item.isUpgradeAble && !selectedShopItem.item.requireSomething)
-        {
-            purchaseText.text = "Upgrade";
-            purchaseButton.interactable = false;
-
-            confirmationDescriptionText.text = "Do you want to upgrade " + selectedShopItem.item.itemName;
-            purchaseTextConfirm.text = "Upgrade";
-        }else if(selectedShopItem.item.isOwned && selectedShopItem.item.isUpgradeAble && selectedShopItem.item.requireSomething)
-        {
-            confirmationDescriptionText.text = "Do you want to upgrade " + selectedShopItem.item.itemName;
-
-            if(selectedShopItem.item.itemRequiered.isOwned)
+        if(selectedShopItem != null)
+        {   
+            if(!selectedShopItem.notEnoughGold)
             {
-                purchaseText.text = "Upgrade";
                 purchaseButton.interactable = true;
-                
-                purchaseTextConfirm.text = "Upgrade";
+            }
+
+            confirmationDescriptionText.text = "Do you want to purchase " + selectedShopItem.item.itemName;
+        }
+
+        purchaseTextConfirm.text = "Purchase";
+        CheckSelectedItem();
+        
+    }
+
+    public void CheckSelectedItem()
+    {
+        if(selectedShopItem != null)
+        {
+            mainPurchaseButtonHolder.SetActive(true);
+            ownedTextHolder.SetActive(false);
+            //item is owned but is not upgrade able and does not require something
+            if(selectedShopItem.item.isItem)
+            {
+                if(selectedShopItem.item.isOwned && !selectedShopItem.item.isUpgradeAble && !selectedShopItem.item.requireSomething)
+                {
+                    purchaseText.text = "Owned";
+                    purchaseButton.interactable = false;
+
+                    //confirmationDescriptionText.text = "Do you want to upgrade " + selectedShopItem.item.itemName;
+                    purchaseTextConfirm.text = "Owned";
+
+                    mainPurchaseButtonHolder.SetActive(false);
+                    ownedTextHolder.SetActive(true);
+                }
+                //item is owned but is  upgrade able and does not require something
+                else if(selectedShopItem.item.isOwned && selectedShopItem.item.isUpgradeAble && !selectedShopItem.item.requireSomething)
+                {
+                    ChangeTextToUpgrade();
+                    if(selectedShopItem.notEnoughGold)
+                    {
+                        purchaseButton.interactable = false;
+                    }
+                }
+                //item is owned but is upgrade able and require something
+                else if(selectedShopItem.item.isOwned && selectedShopItem.item.isUpgradeAble && selectedShopItem.item.requireSomething)
+                {
+                    ChangeTextToUpgrade();
+                    if(selectedShopItem.item.itemRequiered.isOwned)
+                    {
+                        purchaseButton.interactable = true;
+                    }else
+                    {
+                        if(selectedShopItem.notEnoughGold)
+                        {
+                            purchaseButton.interactable = false;
+                        }
+                    }
+                }
+                //item is not owned but is not upgrade able and does not require something
+                else if(!selectedShopItem.item.isOwned && selectedShopItem.item.isUpgradeAble && selectedShopItem.item.requireSomething)
+                {
+                    ChangeTextToPurchase();
+                    if(selectedShopItem.item.itemRequiered.isOwned)
+                    {
+                        purchaseButton.interactable = true;
+                    }else
+                    {
+                        purchaseButton.interactable = false;
+                    }
+                }
             }else
             {
-                purchaseText.text = "Upgrade";
-                purchaseButton.interactable = false;
-
-                confirmationDescriptionText.text = "Do you want to upgrade " + selectedShopItem.item.itemName;
-                purchaseTextConfirm.text = "Upgrade";
+                if(selectedShopItem.item.isOwned)
+                {
+                    if(selectedShopItem.item.isUpgradeAble)
+                    {
+                        if(selectedShopItem.item.requireSomething)
+                        {
+                            ChangeTextToUpgrade();
+                            if(selectedShopItem.item.itemRequiered.isOwned)
+                            {
+                                purchaseButton.interactable = true;
+                                
+                            }else
+                            {
+                               purchaseButton.interactable = false;
+                            }
+                        }
+                    }
+                }else
+                {
+                    ChangeTextToPurchase();
+                    if(selectedShopItem.item.requireSomething)
+                    {
+                        if(selectedShopItem.item.itemRequiered.isOwned)
+                        {
+                            if(!selectedShopItem.notEnoughGold)
+                            {
+                               purchaseButton.interactable = true;  
+                            }
+                        }else
+                        {
+                            if(selectedShopItem.notEnoughGold)
+                            {
+                                purchaseButton.interactable = false;
+                            }
+                        }
+                    }else
+                    {
+                        if(!selectedShopItem.notEnoughGold)
+                        {
+                           purchaseButton.interactable = true;  
+                        }
+                    }
+                }
             }
+        }   
+    }
+
+    void ChangeTextToUpgrade()
+    {
+        itemCostText.text = selectedShopItem.item.itemCost.ToString();
+        confirmationDescriptionText.text = "Do you want to upgrade " + selectedShopItem.item.itemName;
+        purchaseText.text = "Upgrade";                 
+        purchaseTextConfirm.text = "Upgrade";
+    }
+    void ChangeTextToPurchase()
+    {
+        itemCostText.text = selectedShopItem.item.itemCost.ToString();
+        confirmationDescriptionText.text = "Do you want to purchase " + selectedShopItem.item.itemName;
+        purchaseText.text = "Purchase";             
+        purchaseTextConfirm.text = "Purchase";
+    }
+    #endregion
+    #region Pause
+    public void OpenPausePanel()
+    {
+        if(!pauseMenu.activeInHierarchy)
+        {
+            AudioManager.instance.PlaySFX(9);
+            GameManager.instance.pauseMenuOpen = true;
+            pauseMenu.SetActive(true);
         }
     }
+    public void Mute()
+    {   
+        //AudioManager.instance.mute
+        AudioManager.instance.PlaySFX(9);
+
+        if(isMuted == 0)
+        {   
+            muteImage.sprite = mutedIcon;
+            PlayerPrefs.SetInt("Mute", 1);
+            isMuted = 1;
+
+            AudioManager.instance.Mute();
+        }else
+        {
+            muteImage.sprite = notMutedIcon;
+            PlayerPrefs.SetInt("Mute", 0);
+            isMuted = 0;
+            
+            AudioManager.instance.UnMute();
+        }
+        
+    }
+    public void OpenQuestPanel()
+    {
+        if(!questMenu.activeInHierarchy)
+        {
+            AudioManager.instance.PlaySFX(9);
+            CloseMainTab();
+            GameManager.instance.pauseMenuOpen = true;
+            questMenu.SetActive(true);
+        }
+    }
+    public void SaveGame()
+    {
+        GameManager.instance.SaveData();
+        AudioManager.instance.PlaySFX(9);
+    }
+    public void CloseMainTab()
+    {
+        if(mainTab.activeInHierarchy)
+        { 
+            AudioManager.instance.PlaySFX(9);
+            //GameManager.instance.pauseMenuOpen = true;
+            mainTab.SetActive(false);
+            questMenu.SetActive(true);
+        } 
+    }
+    public void CloseQuestPanel()
+    {
+        if(questMenu.activeInHierarchy)
+        {
+            AudioManager.instance.PlaySFX(9);
+            CloseMainTab();
+            //GameManager.instance.pauseMenuOpen = true;
+            questMenu.SetActive(false);
+            mainTab.SetActive(true);
+        }
+    }
+    public void ClosePausePanel()
+    {        
+        if(pauseMenu.activeInHierarchy)
+        {
+            AudioManager.instance.PlaySFX(9);
+            GameManager.instance.pauseMenuOpen = false;
+            pauseMenu.SetActive(false);
+        }
+    }
+    #endregion
+    #region Button
+    public void Hover(Image image)
+    {
+        image.color = hoverColor;
+        AudioManager.instance.PlaySFX(8);
+    }
+    public void ExitHover(Image image)
+    {
+        image.color = defaultColor;
+    }
+    #endregion
 }

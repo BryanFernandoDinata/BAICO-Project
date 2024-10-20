@@ -28,8 +28,11 @@ public class CameraController : MonoBehaviour
             //cinemachineVCamConfiner.InvalidateCache();
             cinemachineVCamConfiner.m_BoundingShape2D = ConfinerManager.instance.confiner;
         }
-        
-        cmVCam.m_Follow = PlayerController.instance.transform;
+        if(PlayerController.instance != null)
+        {
+            target = PlayerController.instance.transform;
+            cmVCam.m_Follow = PlayerController.instance.transform;
+        }
 	}
 	
 	// LateUpdate is called once per frame after Update
