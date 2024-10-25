@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 
     public Rigidbody2D theRB;
     public SpriteRenderer sr;
+    public float initialMoveSpeed;
     public float moveSpeed;
 
     public Animator myAnim;
@@ -43,6 +44,15 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
+        if(moveSpeed != initialMoveSpeed + GameManager.instance.speedBuffValue)
+        {
+            moveSpeed = initialMoveSpeed + GameManager.instance.speedBuffValue;
+        }
+        if(GameManager.instance.playerStats[0].maximumCollectTrashAmt != 2 + GameManager.instance.carryCapacityBuffValue)
+        {
+             GameManager.instance.playerStats[0].maximumCollectTrashAmt =  2 + GameManager.instance.speedBuffValue;
+        }
+
         if (canMove)
         {
             theRB.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized * moveSpeed;

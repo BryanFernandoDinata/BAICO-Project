@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Cave.unity
     guid: cd8c86dea6cbf0045a393f217b254123
   - enabled: 1
-    path: Assets/Scenes/Countryside.unity
+    path: Assets/Scenes/Overworld/Countryside.unity
     guid: ae60441925334924aa23e5f811df151d
   - enabled: 1
     path: Assets/Scenes/GameOver.unity
@@ -27,12 +27,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Shop.unity
     guid: e86d3c88066fa6b418d0b415f7e214cd
   - enabled: 1
-    path: Assets/Scenes/Test.unity
+    path: Assets/Scenes/Testing/Test.unity
     guid: cfc01fde2650c30498e494e481585789
   - enabled: 1
-    path: Assets/Scenes/Test2.unity
+    path: Assets/Scenes/Testing/Test2.unity
     guid: 5bd915d958720f445b22515b08152588
   - enabled: 1
-    path: Assets/Scenes/Town.unity
+    path: Assets/Scenes/Overworld/Town.unity
     guid: f77f1be0f2cb55e4fbd9fa32624c1112
   m_configObjects: {}

@@ -5,7 +5,8 @@ using UnityEngine.SceneManagement;
 using MoreMountains.Feedbacks;
 using System;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour 
+{
 
     public static GameManager instance;
     public bool pauseMenuOpen = false, dialogActive = false, fadingBetweenAreas = false, shopActive = false;
@@ -13,8 +14,15 @@ public class GameManager : MonoBehaviour {
 
     [Header("Player")]
     public CharStats[] playerStats;
+
+    [Header("Items")]
     public List<Item> itemsOwned = new List<Item>();
     public List<Item> allInGameItems = new List<Item>();
+
+    [Header("Quest")]
+    public List<QuestSO> allQuestInTheGame = new List<QuestSO>();
+    [HideInInspector] public int speedBuffValue;
+    [HideInInspector] public int carryCapacityBuffValue;
 
     [Header("Feel")]
     public MMF_Player mmPlayer;
@@ -32,11 +40,47 @@ public class GameManager : MonoBehaviour {
             {
                 itemsOwned.Add(allInGameItems[i]);
                 allInGameItems[i].isOwned = true;
+
+                if(allInGameItems[i].isOwned)
+                {
+                    if(allInGameItems[i].itemName == "Carry Capacity")
+                    {
+                        GameManager.instance.carryCapacityBuffValue += allInGameItems[i].itemBuffAmt;
+                    }else if(allInGameItems[i].itemName == "Trash Bag")
+                    {
+                        GameManager.instance.carryCapacityBuffValue += allInGameItems[i].itemBuffAmt;
+                    }else if(allInGameItems[i].itemName == "Speed Boots")
+                    {
+                        GameManager.instance.speedBuffValue += allInGameItems[i].itemBuffAmt;
+                    }
+                }
             }else
             {
                 allInGameItems[i].isOwned = false;
             }
         }
+        for(int i = 0; i < allQuestInTheGame.Count; i ++)
+        {
+            if(PlayerPrefs.HasKey(allQuestInTheGame[i].questName))
+            {
+                GameObject questUI = Instantiate(GameMenu.instance.questItemUI.gameObject);
+                
+                if(allQuestInTheGame[i].questIsDone)
+                {
+                    questUI.transform.parent = GameMenu.instance.questDoneHolder.transform;
+                }else
+                {
+                    questUI.transform.parent = GameMenu.instance.questOngoingHolder.transform;
+                }
+                
+                if(allQuestInTheGame[i].questIsDone || PlayerPrefs.GetString(allQuestInTheGame[i].questName) == allQuestInTheGame[i].questName + "Done")
+                {
+                    //DialogManager.instance.UpdateQuest(allQuestInTheGame[i], GameMenu.instance.questItemUI);
+                }
+                DialogManager.instance.UpdateTextQuest(allQuestInTheGame[i],GameMenu.instance.questItemUI);
+            }
+        }
+        
 	}
 	
 	// Update is called once per frame

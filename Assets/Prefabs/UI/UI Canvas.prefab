@@ -448,6 +448,8 @@ MonoBehaviour:
   currentLine: 0
   wordSpeed: 0.04
   shouldActivateShop: 0
+  shouldActivateQuest: 0
+  questToGive: {fileID: 0}
 --- !u!114 &114185734125933696
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -499,6 +501,7 @@ MonoBehaviour:
   questMenu: {fileID: 6578829582770434013}
   questOngoingHolder: {fileID: 6050748712029617845}
   questDoneHolder: {fileID: 3628891695426385826}
+  questItemUI: {fileID: 5845028003832641587, guid: 3f4aecf249ee7ed47b71336550fd60fd, type: 3}
 --- !u!1 &155693437396612801
 GameObject:
   m_ObjectHideFlags: 0

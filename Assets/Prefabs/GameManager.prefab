@@ -111,6 +111,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0551adea0fd98474fbb035ddb3ad57e4, type: 2}
   - {fileID: 11400000, guid: 5abe25b72c37aa94a9a268bb38f5a2b1, type: 2}
   - {fileID: 11400000, guid: d9ccc8c8f4f3da245bd21c2cd0f800c8, type: 2}
+  allQuestInTheGame:
+  - {fileID: 11400000, guid: 34090a3eda487d94086c47c424799d49, type: 2}
+  speedBuffValue: 0
+  carryCapacityBuffValue: 0
   mmPlayer: {fileID: 1912031930187606615}
 --- !u!114 &114145718813029494
 MonoBehaviour:

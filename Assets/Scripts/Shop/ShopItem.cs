@@ -74,6 +74,7 @@ public class ShopItem : MonoBehaviour
         if(item != null && !isSelected)
         {
             GameMenu.instance.ResetAllSelectedShopItems();
+            AudioManager.instance.PlaySFX(9);
             
             PlayerPrefs.SetInt("lastShopItemSelected", shopItemIndex);
             
@@ -127,6 +128,7 @@ public class ShopItem : MonoBehaviour
     {
         if(item != null)
         {
+            AudioManager.instance.PlaySFX(9);
             backgroundHolder.color = HoverColor;
             itemIcon.color = HoverColor;
         }
@@ -135,6 +137,7 @@ public class ShopItem : MonoBehaviour
     {
         if(!notEnoughGold)
         {
+            AudioManager.instance.PlaySFX(9);
             GameManager.instance.itemsOwned.Add(item);
             item.isOwned = true;
             

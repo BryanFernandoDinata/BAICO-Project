@@ -61,6 +61,7 @@ public class Collectible : IInteractibles
         {
             PlayerController.instance.collectedCollectibles.Add(this);
             anim.SetTrigger("Collect");
+            AudioManager.instance.PlaySFX(9);
         }else
         {
             if(PlayerController.instance.collectedCollectibles.Count < GameManager.instance.playerStats[0].maximumCollectTrashAmt)
@@ -69,6 +70,7 @@ public class Collectible : IInteractibles
                 {
                     PlayerController.instance.collectedCollectibles.Add(this);
                     anim.SetTrigger("Collect");
+                    AudioManager.instance.PlaySFX(9);
                 }
             }
         }

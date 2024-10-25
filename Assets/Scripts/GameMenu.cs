@@ -15,6 +15,9 @@ public class GameMenu : MonoBehaviour
     public HealthController playerHealthController;
     public TextMeshProUGUI coinText;
 
+    [Header("Boss")]
+    public GameObject bossHealth;
+
     [Header("ButtonColor")]
     public Color defaultColor;
     public Color hoverColor;
@@ -50,6 +53,7 @@ public class GameMenu : MonoBehaviour
     public GameObject questMenu;
     public GameObject questOngoingHolder;
     public GameObject questDoneHolder;
+    public QuestItemUI questItemUI;
 
     private void Awake() 
     {
@@ -85,6 +89,7 @@ public class GameMenu : MonoBehaviour
         {
             GameManager.instance.shopActive = true;
             shopPanel.SetActive(true);
+            AudioManager.instance.PlaySFX(9);
             
             //ResetAllSelectedShopItems();
             //CheckSelectedItem();
@@ -115,12 +120,26 @@ public class GameMenu : MonoBehaviour
                 selectedShopItem.Upgrade();
             }
         }
+
+        if(selectedShopItem.item.itemName == "Carry Capacity")
+        {
+            GameManager.instance.carryCapacityBuffValue += selectedShopItem.item.itemBuffAmt;
+        }else if(selectedShopItem.item.itemName == "Trash Bag")
+        {
+            GameManager.instance.carryCapacityBuffValue += selectedShopItem.item.itemBuffAmt;
+        }else if(selectedShopItem.item.itemName == "Speed Boots")
+        {
+            GameManager.instance.speedBuffValue += selectedShopItem.item.itemBuffAmt;
+        }
+
+        AudioManager.instance.PlaySFX(9);
         ClosePopUpPanel();
     }
     public void OpenPopUpPanel()
     {
         if(!popUpPanel.activeInHierarchy)
         {
+            AudioManager.instance.PlaySFX(9);
             UpdateShopUI();
             popUpPanel.SetActive(true);
         }
@@ -129,6 +148,7 @@ public class GameMenu : MonoBehaviour
     {
         if(popUpPanel.activeInHierarchy)
         {
+            AudioManager.instance.PlaySFX(9);
             popUpPanel.SetActive(false);
         }
     }
@@ -136,6 +156,7 @@ public class GameMenu : MonoBehaviour
     {
         if(shopPanel.activeInHierarchy)
         {
+            AudioManager.instance.PlaySFX(9);
             shopPanel.SetActive(false);
             GameManager.instance.shopActive = false;
         }

@@ -17,11 +17,11 @@ public class DialogManager : MonoBehaviour
     public float wordSpeed;
     private bool justStarted;
 
-    private string questToMark;
-    private bool markQuestComplete;
-    private bool shouldMarkQuest;
-
     [HideInInspector] public bool shouldActivateShop = false;
+    [HideInInspector] public bool shouldActivateQuest = false;
+    [HideInInspector] public QuestSO questToGive;
+    GameObject questUI;
+
 
     private void Awake() 
     {
@@ -34,17 +34,6 @@ public class DialogManager : MonoBehaviour
     void Start()
     {
         dialogText.text = "";
-    }
-    private void Update() 
-    {
-        
-    }
-    public void ShouldActivateQuestAtEnd(string questName, bool markComplete)
-    {
-        questToMark = questName;
-        markQuestComplete = markComplete;
-
-        shouldMarkQuest = true;
     }
     public void ShowDialog(List<DialogSO> _lines)
     {
@@ -76,6 +65,49 @@ public class DialogManager : MonoBehaviour
             GameMenu.instance.OpenShop();
             shouldActivateShop = false;   
         }
+
+        if(shouldActivateQuest)
+        {
+            UpdateQuest(questToGive, GameMenu.instance.questItemUI);
+        }
+
+        nameText.text = dialogLines[currentLine].speakerName;
+    }
+    public void UpdateQuest(QuestSO _quest, QuestItemUI _questUI)
+    {
+        if(PlayerPrefs.HasKey(_quest.questName))
+        {
+            if(PlayerPrefs.GetString(_quest.questName) == _quest.questName + "Done")
+            {
+                _quest.questIsDone = true;
+            }else
+            {
+                _quest.questIsDone = false;
+            }
+        }else
+        {
+            _quest.questIsDone = false;
+            questUI = Instantiate(_questUI.gameObject);
+
+            PlayerPrefs.SetString(_quest.questName, _quest.questName); 
+        }
+        
+        
+        if(_quest.questIsDone)
+        {
+            questUI.transform.parent = GameMenu.instance.questDoneHolder.transform;
+        }else
+        {
+            questUI.transform.parent = GameMenu.instance.questOngoingHolder.transform;
+        }
+        
+
+        UpdateTextQuest(_quest, _questUI);
+    }
+    public void UpdateTextQuest(QuestSO _quest, QuestItemUI _questUI)
+    {
+        _questUI.questNameText.text = _quest.questName;
+        _questUI.valueText.text = "(" + _quest.doneOutOf.ToString() + " / " + _quest.needToDo.ToString() + ")";
     }
 
     IEnumerator Typing()
@@ -113,5 +145,7 @@ public class DialogManager : MonoBehaviour
         {
             RemoveText();
         }
+
+        nameText.text = dialogLines[currentLine].speakerName;
     }
 }

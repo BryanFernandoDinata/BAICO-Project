@@ -145,6 +145,7 @@ GameObject:
   - component: {fileID: 7653517747849594154}
   - component: {fileID: 8490527923267942480}
   - component: {fileID: 6946737338087583334}
+  - component: {fileID: 5845028003832641587}
   m_Layer: 5
   m_Name: QuestItem
   m_TagString: Untagged
@@ -269,3 +270,17 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5845028003832641587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5639639124229021923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 610ae165f5acac34eb1b50fec08ccac7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questNameText: {fileID: 6946737338087583334}
+  valueText: {fileID: 3458901695457734799}

@@ -165,10 +165,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   theRB: {fileID: 50060663575902748}
   sr: {fileID: 212754941309248394}
+  initialMoveSpeed: 5
   moveSpeed: 5
   myAnim: {fileID: 95214761617523964}
   areaTransitionName: 
-  Players: []
   canMove: 1
   collectedCollectibles: []
   ownedItems: []
